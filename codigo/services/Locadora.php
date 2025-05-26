@@ -135,12 +135,20 @@ class Locadora {
         return $this->itens;
     }
 
-    // Calcular previsão do valor
-    public function calcularPrevisaoAluguel(string $tipo, int $dias): float {
 
-       if($tipo ==='Filme'){
-            return (new Filme('','')) ->calcularAluguel($dias);
-       }
-       return (new Serie('','')) ->calcularAluguel($dias);
+    public function calcularPrevisaoAluguel(int $dias, string $tipo): float {
+    switch (strtolower($tipo)) {
+        case 'filme':
+            return $dias * DIARIA_FILME;
+        case 'serie':
+            return $dias * DIARIA_SERIE;
+        case 'novela':
+            return $dias * DIARIA_NOVELA;
+        case 'desenho':
+            return $dias * DIARIA_DESENHO;
+        default:
+            return 0;
     }
+}
+
 }

@@ -316,12 +316,6 @@ $usuario = Auth::getUsuario();
         <h2 class="title-font">CineHome</h2>
     </div>
 
-    <?php if ($mensagem):?>
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($mensagem) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <?php endif; ?>
 
         <!-- ############## HOME ############ -->
 
@@ -669,21 +663,29 @@ $usuario = Auth::getUsuario();
               <form method="post" class="needs-validation mt-3" novalidate>
                 <!-- Tipo -->
                 <div class="mb-3">
-                  <label for="tipoPreco" class="form-label">Tipo</label>
-                  <select name="tipo" id="tipoPreco" class="form-select common-input text-black" required>
+                  <label for="tipo_calculo" class="form-label">Tipo</label>
+                  <select name="tipo_calculo" id="tipo_calculo" class="form-select common-input text-black" required>
                     <option value="" selected disabled>Selecione</option>
                     <option value="filme" class="text-black">Filme</option>
                     <option value="serie" class="text-black">Série</option>
                     <option value="novela" class="text-black">Novela</option>
-                    <option value="documentario" class="text-black">Documentário</option>
+                    <option value="desenho" class="text-black">Desenho</option>
                   </select>
                 </div>
                 <!-- Dias -->
                 <div class="mb-3">
-                  <label for="dias" class="form-label">Tempo em dias</label>
-                  <input type="number" name="dias" id="dias" class="form-control common-input text-black " min="1" required>
+                  <label for="dias_calculo" class="form-label">Tempo em dias</label>
+                  <input type="number" name="dias_calculo" id="dias_calculo" class="form-control common-input text-black " min="1" required>
                 </div>
-                <button class="btn common-btn w-100 mt-2" type="submit">Calcular</button>
+                <button class="btn common-btn w-100 mt-2" type="submit" name="calcular">Calcular</button>
+
+                <br>
+                <br>
+                <?php if (!empty($mensagem) && isset($_POST['calcular'])): ?>
+                <div class="alert alert-danger text-center text-black">
+                    <?= $mensagem ?>
+                </div>
+                <?php endif; ?>
               </form>
             </div>
           </div>

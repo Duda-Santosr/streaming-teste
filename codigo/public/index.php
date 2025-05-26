@@ -54,7 +54,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $tipo = $_POST['tipo'];
 
         $item = ($tipo == 'Filme') ? new Filme($titulo, $sinopse, $genero) : new Serie($titulo, $sinopse, $genero) ;
-        // $item = ($tipo == 'Desenho') ? new Desenho($titulo, $sinopse, $genero) : new Novela($titulo, $sinopse, $genero) ;
+
 
         $locadora->adicionarItem($item);
 
@@ -79,6 +79,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $mensagem = "Previsão de valor para {$dias} dias: R$ " . number_format($valor, 2, ',', '.');
     }    
 }
+
 
 renderizar:
 // require_once __DIR__ . '/../views/home.php';
