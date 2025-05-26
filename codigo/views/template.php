@@ -594,7 +594,7 @@ $usuario = Auth::getUsuario();
           <div class="col-md-6 col-lg-5 d-flex justify-content-center">
             <div class="p-3 common-container bg-dark text-white w-100" style="max-width: 400px;">
               <h4 class="text-center">Adicionar ao catálogo</h4>
-              <form method="post" class="needs-validation mt-3" novalidate>
+              <form method="post" class="needs-validation mt-3" enctype="multipart/form-data" novalidate>
                 <!-- Título -->
                 <div class="mb-3">
                   <label for="filme" class="form-label">Título</label>
@@ -636,9 +636,9 @@ $usuario = Auth::getUsuario();
                 <!-- Imagem -->
                 <div class="mb-3">
                   <label for="imagem" class="form-label">Adicionar Imagem</label>
-                  <input type="file" name="imagem" id="imagem" class="form-control common-input" required>
+                  <input type="file" name="imagem" id="imagem" class="form-control common-input text-dark" required>
                 </div>
-                <button class="btn common-btn w-100 mt-2" type="submit">Adicionar</button>
+                <button class="btn common-btn w-100 mt-2" type="submit" name="adicionar">Adicionar</button>
               </form>
             </div>
           </div>
@@ -682,7 +682,7 @@ $usuario = Auth::getUsuario();
                 <br>
                 <br>
                 <?php if (!empty($mensagem) && isset($_POST['calcular'])): ?>
-                <div class="alert alert-danger text-center text-black">
+                <div class="alert alert-danger text-center text-danger">
                     <?= $mensagem ?>
                 </div>
                 <?php endif; ?>

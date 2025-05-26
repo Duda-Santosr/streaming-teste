@@ -12,7 +12,7 @@ session_start();
 use Services\{Locadora, Auth};
 
 // Importar as classes Carro e moto
-use Models\{serie, filme};
+use Models\{Serie, Filme, Novela, Desenho};
 
 // Verificar se o usuário está logado
 if(!Auth::verificarLogin()){
@@ -35,49 +35,74 @@ $mensagem = '';
 $usuario = Auth::getUsuario();
 
 // Verificar os dados do formulário via POST
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Verificar se requer permissão de administrador
-    if(isset($_POST['adicionar']) || isset($_POST['deletar']) || isset($_POST['alugar']) ||isset($_POST['devolver'])){
-
-        if(!Auth::isAdmin()){
+    // Verificar permissões administrativas
+    if (isset($_POST['adicionar']) || isset($_POST['deletar']) || isset($_POST['alugar']) || isset($_POST['devolver']))
+{
+        if (!Auth::isAdmin()) {
             $mensagem = "Você não tem permissão para realizar essa ação.";
             goto renderizar;
         }
     }
 
-
-    if(isset($_POST['adicionar'])){
+    // Adicionar item
+    if (isset($_POST['adicionar'])) {
         $titulo = $_POST['titulo'];
         $sinopse = $_POST['sinopse'];
         $genero = $_POST['genero'];
         $tipo = $_POST['tipo'];
 
-        $item = ($tipo == 'Filme') ? new Filme($titulo, $sinopse, $genero) : new Serie($titulo, $sinopse, $genero) ;
+    
+
+        // Criar o item conforme o tipo
+        switch (strtolower($tipo)) {
+            case 'filme':
+                $item = new Filme($titulo, $sinopse, $genero);
+                break;
+            case 'serie':
+                $item = new Serie($titulo, $sinopse, $genero);
+                break;
+            case 'novela':
+                $item = new Novela($titulo, $sinopse, $genero);
+                break;
+            case 'desenho':
+                $item = new Desenho($titulo, $sinopse, $genero);
+                break;
+            default:
+                $mensagem = "Tipo inválido.";
+                goto renderizar;
+        }
 
 
+        // Salvar item na locadora
         $locadora->adicionarItem($item);
-
         $mensagem = "Item adicionado com sucesso!";
     }
-    elseif(isset($_POST['alugar'])){
 
+    // Alugar item
+    elseif (isset($_POST['alugar'])) {
         $dias = isset($_POST['dias']) ? (int)$_POST['dias'] : 1;
         $mensagem = $locadora->alugarItem($_POST['titulo'], $dias);
     }
-    elseif(isset($_POST['devolver'])){
+
+    // Devolver item
+    elseif (isset($_POST['devolver'])) {
         $mensagem = $locadora->devolverItem($_POST['titulo']);
     }
-    elseif(isset($_POST['deletar'])){
+
+    // Deletar item
+    elseif (isset($_POST['deletar'])) {
         $mensagem = $locadora->deletarItem($_POST['titulo'], $_POST['tipo']);
     }
-    elseif(isset($_POST['calcular'])){
+
+    // Calcular previsão de aluguel
+    elseif (isset($_POST['calcular'])) {
         $dias = (int)$_POST['dias_calculo'];
         $tipo = $_POST['tipo_calculo'];
         $valor = $locadora->calcularPrevisaoAluguel($dias, $tipo);
-
         $mensagem = "Previsão de valor para {$dias} dias: R$ " . number_format($valor, 2, ',', '.');
-    }    
+    }
 }
 
 
