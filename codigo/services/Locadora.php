@@ -67,6 +67,8 @@ class Locadora {
         $this->salvarItens();
     }
 
+    
+
     //Remover veículo
     public function deletarItem(string $titulo, string $genero): string{
 

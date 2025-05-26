@@ -1,46 +1,38 @@
 [
-     {
-        "titulo": "Como Treinar Seu Dragão 2",
-        "sinopse": "Cinco anos se passaram desde que Soluço e Banguela uniram os dragões e os vikings de Berk. Agora, eles dedicam seu tempo a mapear os territórios inexplorados da ilha. Durante uma de suas aventuras, a dupla descobre uma caverna secreta que abriga centenas de dragões selvagens — e uma misteriosa cavaleira que se revela ser a mãe há muito perdida de Soluço, Valka (Cate Blanchett). ",
-        "genero": "Ação",
+    {
         "tipo": "Filme",
+        "titulo": "Como Treinar Seu Drag\u00e3o 2",
+        "genero": "Filme",
         "disponivel": true
     },
     {
-        "titulo": "Dexter",
-        "sinopse": "A série Dexteracompanha Dexter Morgan, um especialista forense que também é um assassino em série. Ele se dedica a eliminar criminosos que escaparam da justiça, seguindo um código criado pelo seu pai. De acordo com a Wikipédia, Dexter é uma série de drama criminal e suspense.",
-        "genero": "Suspense",
-        "tipo": "Série",
-        "disponivel": true
-    },
-    {
-        "titulo": "Ainda Estou Aqui",
-        "sinopse": "Eunice Paiva inicia uma batalha solitária para descobrir a verdade por trás do desaparecimento do marido, o ex-deputado do PTB Rubens Paiva, enquanto tenta manter sua família unida.",
-        "genero": "Drama",
-        "tipo": "Filme",
-        "disponivel": false
-    },
-
-     {
-        "titulo": "Peaky Blinders",
-        "sinopse": "Série dramática de época britânica ambientada em Birmingham, Inglaterra, após a Primeira Guerra Mundial, acompanhando a ascensão da família Shelby, uma gangue criminosa liderada pelo implacável Thomas Shelby.",
-        "genero": "Ação",
-        "tipo": "Série",
-        "disponivel": true
-    },
-
-    {
-        "titulo": "Avenida Brasil",
-        "sinopse": "Esta é a história dramática de Rita, que luta para recuperar a vida que sua terrível madrasta, Carminha, lhe tirou quando criança . Ela terá que confrontar seu passado e decidir até onde está disposta a ir para se vingar das pessoas que mais a machucaram.",
-        "genero": "Drama",
-        "tipo": "Novela",
-        "disponivel": false
-    },
-    {
-        "titulo": "Ben 10",
-        "sinopse": "Ben 10 é uma série animada que acompanha Ben Tennyson, um garoto de 10 anos, que descobre o Omnitrix, um dispositivo específico que lhe permite se transformar em diversos alienígenas com poderes únicos. Com a ajuda de sua prima Gwen e seu avô Max, Ben embarca em aventuras para combater vilões e proteger o mundo de ameaças desconhecidas e terráqueas. ",
-        "genero": "Infantil",
         "tipo": "Desenho",
+        "titulo": "Dexter",
+        "genero": "S\u00e9rie",
+        "disponivel": false
+    },
+    {
+        "tipo": "Filme",
+        "titulo": "Ainda Estou Aqui",
+        "genero": "Filme",
+        "disponivel": false
+    },
+    {
+        "tipo": "Desenho",
+        "titulo": "Peaky Blinders",
+        "genero": "S\u00e9rie",
+        "disponivel": true
+    },
+    {
+        "tipo": "Novela",
+        "titulo": "Avenida Brasil",
+        "genero": "Novela",
+        "disponivel": false
+    },
+    {
+        "tipo": "Desenho",
+        "titulo": "Ben 10",
+        "genero": "Desenho",
         "disponivel": false
     }
 ]

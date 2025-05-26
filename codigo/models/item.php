@@ -29,4 +29,14 @@
     public function setDisponivel(bool $disponivel):void{
         $this->disponivel = $disponivel;
     }
+    protected string $imagem = '';
+
+public function setImagem(string $imagem): void {
+    $this->imagem = $imagem;
+}
+
+public function getImagem(): string {
+    return $this->imagem;
+}
+
  }

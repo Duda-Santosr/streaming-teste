@@ -48,37 +48,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Adicionar item
     if (isset($_POST['adicionar'])) {
-        $titulo = $_POST['titulo'];
-        $sinopse = $_POST['sinopse'];
-        $genero = $_POST['genero'];
-        $tipo = $_POST['tipo'];
+    $titulo = $_POST['titulo'];
+    $sinopse = $_POST['sinopse'];
+    $genero = $_POST['genero'];
+    $tipo   = $_POST['tipo'];
 
-    
+    // Processar upload da imagem
+    $imagemPath = '';
+    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+        $nomeImagem = basename($_FILES['imagem']['name']);
+        $diretorioDestino = __DIR__ . '/../img_upload/';
+        $caminhoCompleto = $diretorioDestino . $nomeImagem;
 
-        // Criar o item conforme o tipo
-        switch (strtolower($tipo)) {
-            case 'filme':
-                $item = new Filme($titulo, $sinopse, $genero);
-                break;
-            case 'serie':
-                $item = new Serie($titulo, $sinopse, $genero);
-                break;
-            case 'novela':
-                $item = new Novela($titulo, $sinopse, $genero);
-                break;
-            case 'desenho':
-                $item = new Desenho($titulo, $sinopse, $genero);
-                break;
-            default:
-                $mensagem = "Tipo inválido.";
-                goto renderizar;
+        if (!is_dir($diretorioDestino)) {
+            mkdir($diretorioDestino, 0777, true);
         }
 
-
-        // Salvar item na locadora
-        $locadora->adicionarItem($item);
-        $mensagem = "Item adicionado com sucesso!";
+        if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminhoCompleto)) {
+            $imagemPath = 'img_upload/' . $nomeImagem;
+        } else {
+            $mensagem = "Erro ao salvar a imagem.";
+            goto renderizar;
+        }
     }
+
+    // Criar o item conforme o tipo
+    switch (strtolower($tipo)) {
+        case 'filme':
+            $item = new Filme($titulo, $sinopse, $genero);
+            break;
+        case 'serie':
+            $item = new Serie($titulo, $sinopse, $genero);
+            break;
+        case 'novela':
+            $item = new Novela($titulo, $sinopse, $genero);
+            break;
+        case 'desenho':
+            $item = new Desenho($titulo, $sinopse, $genero);
+            break;
+        default:
+            $mensagem = "Tipo inválido.";
+            goto renderizar;
+    }
+
+    $item->setImagem($imagemPath);
+    $locadora->adicionarItem($item);
+    $mensagem = "Item adicionado com sucesso!";
+}
 
     // Alugar item
     elseif (isset($_POST['alugar'])) {

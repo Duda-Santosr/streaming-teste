@@ -393,10 +393,10 @@ $usuario = Auth::getUsuario();
                 </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carrosselAssinaturas" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselAssinaturas" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carrosselAssinaturas" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselAssinaturas" data-bs-slide="next">
                 <span class="carousel-control-next-icon"></span>
             </button>
             </div>
@@ -562,10 +562,10 @@ $usuario = Auth::getUsuario();
                     </div>
                     </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselDesenhos" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselAssinaturas" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselDesenhos" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselAssinaturas" data-bs-slide="next">
                     <span class="carousel-control-next-icon"></span>
                 </button>
                 </div>
@@ -640,6 +640,7 @@ $usuario = Auth::getUsuario();
                 </div>
                 <button class="btn common-btn w-100 mt-2" type="submit" name="adicionar">Adicionar</button>
               </form>
+              
             </div>
           </div>
         <?php endif; ?>
@@ -696,7 +697,7 @@ $usuario = Auth::getUsuario();
         <?php foreach ($locadora->listarItens() as $item): ?>
             <div class="col-md-6 col-lg-5 d-flex justify-content-center">
             <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-                <img src="../" class="card-img-top fmsr-poster" alt="Poster">
+                <img src="<?= htmlspecialchars($item->getImagem()) ?>" class="card-img-top fmsr-poster" alt="<?= htmlspecialchars($item->getTitulo()) ?>">
                 <div class="card-body text-center">
               <h4 class="card-title"><?= htmlspecialchars($item->getTitulo()) ?></h4>
               
@@ -779,7 +780,7 @@ $usuario = Auth::getUsuario();
  
     <!-- Rodapé -->
     <footer class="d-flex flex-column align-items-center justify-content-center">
-    <div class="nav-logo"><img src="img/Logo_streaming(2).png" alt="Logo"></div>
+    <div class="nav-logo"><img src="../img/Logo_streaming(2).png" alt="Logo"></div>
     <p class="lh-1"><strong>Entre em contato:</strong> contact@cinehome.com </p>
     <p class="lh-1" style="font-size: small;">©️2025, Cinehome.com | Direitos Reservados</p>
     </footer>
