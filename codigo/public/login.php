@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label class="form-label">Senha</label>
                         <input type="password" name="password" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                    <button type="submit" class="btn btn-danger w-100">Entrar</button>
                 </form>
         <div class="text-link">
           Ainda não tem cadastro? <a href="cadastro.php">Cadastre-se</a>
