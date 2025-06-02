@@ -1,3 +1,114 @@
+<?php
+require_once 'config/config.php';
+require_once 'vendor/autoload.php';
+use Services\{Locadora, UploadHandler};
+use Models\{Filme, Serie, Novela, Desenho};
+
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+umask(0);
+
+// Debug - Verificar se as constantes foram carregadas
+echo "<div class='alert alert-info'>";
+echo "ARQUIVO_JSON = " . ARQUIVO_JSON . "<br>";
+echo "Arquivo existe? " . (file_exists(ARQUIVO_JSON) ? "Sim" : "Não") . "<br>";
+if (file_exists(ARQUIVO_JSON)) {
+    echo "Conteúdo do arquivo:<br><pre>";
+    echo htmlspecialchars(file_get_contents(ARQUIVO_JSON));
+    echo "</pre>";
+}
+echo "</div>";
+
+if (!is_dir('img/uploads')) {
+    mkdir('img/uploads', 0777, true);
+}
+chmod('img/uploads', 0777);
+
+$locadora = new Locadora();
+$uploadHandler = new UploadHandler();
+
+// Debug - Verificar os itens carregados
+echo "<div class='alert alert-info'>";
+echo "Itens carregados:<br><pre>";
+var_dump($locadora->listarItens());
+echo "</pre></div>";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['titulo'], $_POST['sinopse'], $_POST['genero'], $_POST['tipo'])) {
+        try {
+            // Debug - Mostrar todos os dados do POST
+            error_log("Dados do POST: " . print_r($_POST, true));
+            
+            // Verifica se foi selecionada uma imagem existente
+            $imagemPath = null;
+            if (!empty($_POST['imagem_existente'])) {
+                $imagemPath = $_POST['imagem_existente'];
+                error_log("Imagem existente selecionada: " . $imagemPath);
+                
+                // Verifica se o arquivo existe
+                if (!file_exists($imagemPath)) {
+                    error_log("AVISO: Arquivo de imagem não encontrado: " . $imagemPath);
+                }
+            } 
+            // Se não foi selecionada uma imagem existente e foi feito upload
+            elseif (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+                error_log("Dados do arquivo enviado: " . print_r($_FILES['imagem'], true));
+                $imagemPath = $uploadHandler->handleUpload($_FILES['imagem']);
+                error_log("Nova imagem enviada: " . $imagemPath);
+            }
+            
+            // Se nenhuma imagem foi fornecida, usa a imagem padrão
+            if ($imagemPath === null) {
+                $imagemPath = 'img/no-image.jpg';
+                error_log("Usando imagem padrão: " . $imagemPath);
+            }
+
+            // Debug - Mostrar o caminho da imagem
+            echo "<div class='alert alert-info'>Caminho da imagem: " . htmlspecialchars($imagemPath) . "</div>";
+            
+            // Cria o item apropriado baseado no tipo
+            $item = match($_POST['tipo']) {
+                'filme' => new Filme($_POST['titulo'], $_POST['sinopse'], $_POST['genero'], $imagemPath),
+                'serie' => new Serie($_POST['titulo'], $_POST['sinopse'], $_POST['genero'], $imagemPath),
+                'novela' => new Novela($_POST['titulo'], $_POST['sinopse'], $_POST['genero'], $imagemPath),
+                'desenho' => new Desenho($_POST['titulo'], $_POST['sinopse'], $_POST['genero'], $imagemPath),
+                default => throw new \RuntimeException('Tipo inválido')
+            };
+
+            // Debug - Verificar o item criado
+            error_log("Item criado: " . print_r([
+                'titulo' => $item->getTitulo(),
+                'genero' => $item->getGenero(),
+                'imagem' => $item->getImagem()
+            ], true));
+            
+            // Adiciona o item ao catálogo
+            $locadora->adicionarItem($item);
+            $_SESSION['mensagem'] = 'Item adicionado com sucesso!';
+            
+        } catch (\RuntimeException $e) {
+            $_SESSION['erro'] = $e->getMessage();
+            error_log("Erro ao adicionar item: " . $e->getMessage());
+        }
+    }
+}
+
+// Debug - Mostrar o conteúdo atual do arquivo JSON
+if (file_exists(ARQUIVO_JSON)) {
+    error_log("Conteúdo atual do arquivo JSON: " . file_get_contents(ARQUIVO_JSON));
+}
+
+// Exibe mensagens de sucesso/erro
+if (isset($_SESSION['mensagem'])) {
+    echo "<div class='alert alert-success'>{$_SESSION['mensagem']}</div>";
+    unset($_SESSION['mensagem']);
+}
+if (isset($_SESSION['erro'])) {
+    echo "<div class='alert alert-danger'>{$_SESSION['erro']}</div>";
+    unset($_SESSION['erro']);
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -203,7 +314,7 @@
     <nav class="navbar navbar-expand-lg nav-color p-3">
         <div class="container-fluid justify-content-center">
         <a href="home_adm.html" class="navbar-brand nav-logo mx-auto">
-            <img src="../codigo/img/Logo Streaming Filmes.svg" alt="Logo">
+            <img src="./img/Logo Streaming Filmes.svg" alt="Logo">
         </a>
         <button class="navbar-toggler text-white border-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -263,7 +374,7 @@
       <div class="col-md-6 col-lg-5 d-flex justify-content-center">
         <div class="p-3 common-container bg-dark text-white w-100" style="max-width: 400px;">
           <h4 class="text-center">Adicionar ao catálogo</h4>
-          <form method="post" class="needs-validation mt-3" novalidate>
+          <form method="post" class="needs-validation mt-3" novalidate enctype="multipart/form-data">
   
             <!-- Título -->
             <div class="mb-3">
@@ -309,8 +420,24 @@
   
             <!-- Imagem -->
             <div class="mb-3">
-              <label for="imagem" class="form-label">Adicionar Imagem</label>
-              <input type="file" name="imagem" id="imagem" class="form-control common-input" required>
+              <label class="form-label">Imagem</label>
+              <select name="imagem_existente" class="form-select common-input text-black mb-2">
+                <option value="">Selecione uma imagem existente (opcional)</option>
+                <?php
+                $imagens = glob("img/*.{jpg,jpeg,png,gif}", GLOB_BRACE);
+                foreach ($imagens as $imagem) {
+                    $nome = basename($imagem);
+                    $caminho = 'img/' . $nome;
+                    echo "<option value='" . htmlspecialchars($caminho) . "'>" . htmlspecialchars($nome) . "</option>";
+                }
+                ?>
+              </select>
+              <div class="text-center mb-2">-- OU --</div>
+              <label for="imagem" class="form-label">Upload de nova imagem</label>
+              <input type="file" name="imagem" id="imagem" class="form-control common-input" accept="image/*">
+              <div id="previewContainer" class="mt-2 text-center" style="max-width: 200px; margin: 0 auto; display: none;">
+                <img id="previewImage" class="img-fluid" alt="Preview">
+              </div>
             </div>
 
             <button class="btn common-btn w-100 mt-2" type="submit">Adicionar</button>
@@ -352,17 +479,43 @@
     <!-- Cards-->
     <div class="row justify-content-center align-items-start gy-4 gx-4 mt-5">
   
+      <!-- Debug info -->
+      <div class="alert alert-info">
+        <?php
+        $itens = $locadora->listarItens();
+        echo "<pre>";
+        foreach ($itens as $item) {
+            echo "Título: " . htmlspecialchars($item->getTitulo()) . "\n";
+            echo "Imagem: " . htmlspecialchars($item->getImagem()) . "\n";
+            echo "Arquivo existe? " . (file_exists($item->getImagem()) ? "Sim" : "Não") . "\n";
+            echo "Caminho absoluto: " . realpath($item->getImagem()) . "\n\n";
+        }
+        echo "</pre>";
+        ?>
+      </div>
+
       <!-- Itens cadastrados -->
+      <?php
+      foreach ($itens as $item): 
+        $imagemPath = $item->getImagem();
+        // Verifica se o arquivo existe, senão usa a imagem padrão
+        if (!file_exists($imagemPath)) {
+            $imagemPath = './img/no-image.jpg';
+        }
+      ?>
       <div class="col-md-6 col-lg-5 d-flex justify-content-center">
         <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-          <img src="img/comotreinarseudragao2.jpg" class="card-img-top fmsr-poster" alt="Poster">
+          <img src="<?php echo htmlspecialchars($imagemPath); ?>" class="card-img-top fmsr-poster" alt="<?php echo htmlspecialchars($item->getTitulo()); ?>" style="height: 300px; object-fit: cover;">
           <div class="card-body text-center">
-            <h4 class="card-title">Como Treinar Seu Dragão</h4>
-            <p>Filme | Animação | Aventura</p>
+            <h4 class="card-title"><?php echo htmlspecialchars($item->getTitulo()); ?></h4>
+            <p><?php echo ucfirst($item->getGenero()); ?></p>
   
             <!-- Formulário de ações -->
             <form method="POST" class="btn-group-actions d-flex flex-column gap-2">
+              <input type="hidden" name="titulo" value="<?php echo htmlspecialchars($item->getTitulo()); ?>">
+              <input type="hidden" name="genero" value="<?php echo htmlspecialchars($item->getGenero()); ?>">
   
+              <?php if ($item->isDisponivel()): ?>
               <!-- Aluguel -->
               <div class="d-flex gap-2 justify-content-center">
                 <input type="number" name="dias" class="form-control form-control-sm days-input" value="1" min="1" required style="width: 60px;">
@@ -375,104 +528,18 @@
                 <button class="btn btn-secondary btn-sm" type="submit" name="editar">Editar</button>
                 <button class="btn btn-danger btn-sm" type="submit" name="deletar">Deletar</button>
               </div>
-  
+              <?php else: ?>
+              <div class="d-flex gap-2 justify-content-center">
+                <button class="btn btn-warning btn-sm" disabled>Indisponível</button>
+                <button class="btn btn-secondary btn-sm" type="submit" name="editar">Editar</button>
+                <button class="btn btn-danger btn-sm" type="submit" name="deletar">Deletar</button>
+              </div>
+              <?php endif; ?>
             </form>
           </div>
         </div>
       </div>
-  
-      <div class="col-md-6 col-lg-5 d-flex justify-content-center">
-        <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-        <img src="img/dexter.jpg" class="card-img-top fmsr-poster" alt="Poster">
-        <div class="card-body text-center">
-            <h4 class="card-title">Dexter</h4>
-            <p>Série | Drama</p>
-            <form method="POST" class="btn-group-actions d-flex flex-column gap-2">
-            <div class="d-flex gap-2 justify-content-center">
-                <input type="number" name="dias" class="form-control form-control-sm days-input" value="1" min="1" required style="width: 60px;">
-                <button class="btn btn-primary btn-sm" type="submit" name="alugar">Alugar</button>
-            </div>
-            <div class="d-flex gap-2 justify-content-center">
-                <button class="btn btn-success btn-sm">Disponível</button>
-                <button class="btn btn-secondary btn-sm" type="submit" name="editar">Editar</button>
-                <button class="btn btn-danger btn-sm" type="submit" name="deletar">Deletar</button>
-            </div>
-            </form>
-        </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-lg-5 d-flex justify-content-center">
-        <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-        <img src="img/aindaestouaqui.jpg" class="card-img-top fmsr-poster" alt="Poster">
-        <div class="card-body text-center">
-            <h4 class="card-title">Ainda Estou Aqui</h4>
-            <p>Filme | Drama</p>
-            <form method="POST" class="btn-group-actions d-flex flex-column gap-2">
-            <div class="d-flex gap-2 justify-content-center">
-                <button class="btn btn-warning btn-sm" disabled>Indisponível</button>
-                <button class="btn btn-secondary btn-sm" type="submit" name="editar">Editar</button>
-                <button class="btn btn-danger btn-sm" type="submit" name="deletar">Deletar</button>
-            </div>
-            </form>
-        </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-lg-5 d-flex justify-content-center">
-        <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-        <img src="img/valetudo.jpg" class="card-img-top fmsr-poster" alt="Poster">
-        <div class="card-body text-center">
-            <h4 class="card-title">Vale Tudo</h4>
-            <p>Novela | Drama</p>
-            <form method="POST" class="btn-group-actions d-flex flex-column gap-2">
-            <div class="d-flex gap-2 justify-content-center">
-                <input type="number" name="dias" class="form-control form-control-sm days-input" value="1" min="1" required style="width: 60px;">
-                <button class="btn btn-primary btn-sm" type="submit" name="alugar">Alugar</button>
-            </div>
-            <div class="d-flex gap-2 justify-content-center">
-                <button class="btn btn-success btn-sm">Disponível</button>
-                <button class="btn btn-secondary btn-sm" type="submit" name="editar">Editar</button>
-                <button class="btn btn-danger btn-sm" type="submit" name="deletar">Deletar</button>
-            </div>
-            </form>
-        </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-lg-5 d-flex justify-content-center">
-        <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-            <img src="img/peakyblinders.png" class="card-img-top fmsr-poster" alt="Poster">
-            <div class="card-body text-center">
-                <h4 class="card-title">Peaky Blinders</h4>
-                <p>Série | Drama | Ação</p>
-                <form method="POST" class="btn-group-actions d-flex flex-column gap-2">
-                <div class="d-flex gap-2 justify-content-center">
-                    <button class="btn btn-warning btn-sm" disabled>Indisponível</button>
-                    <button class="btn btn-secondary btn-sm" type="submit" name="editar">Editar</button>
-                    <button class="btn btn-danger btn-sm" type="submit" name="deletar">Deletar</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-lg-5 d-flex justify-content-center">
-        <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-            <img src="img/greysanatomy (1).jpg" class="card-img-top fmsr-poster" alt="Poster">
-            <div class="card-body text-center">
-                <h4 class="card-title">Greys Anatomy</h4>
-                <p>Série | Drama </p>
-                <form method="POST" class="btn-group-actions d-flex flex-column gap-2">
-                <div class="d-flex gap-2 justify-content-center">
-                    <button class="btn btn-warning btn-sm" disabled>Indisponível</button>
-                    <button class="btn btn-secondary btn-sm" type="submit" name="editar">Editar</button>
-                    <button class="btn btn-danger btn-sm" type="submit" name="deletar">Deletar</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
+      <?php endforeach; ?>
   
     </div> 
   
@@ -480,12 +547,49 @@
   
   <!-- Rodapé -->
 <footer class="d-flex flex-column align-items-center justify-content-center">
-  <div class="nav-logo"><img src="img/Logo_streaming(2).png" alt="Logo"></div>
+  <div class="nav-logo"><img src="./img/Logo_streaming(2).png" alt="Logo"></div>
   <p class="lh-1"><strong>Entre em contato:</strong> contact@cinehome.com </p>
   <p class="lh-1" style="font-size: small;">©️2025, Cinehome.com | Direitos Reservados</p>
 </footer>
 
     <!-- js do bootstrap -->
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imagemSelect = document.querySelector('select[name="imagem_existente"]');
+        const imagemFile = document.querySelector('input[name="imagem"]');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImg = document.getElementById('previewImage');
+        
+        // Preview para imagem selecionada do dropdown
+        imagemSelect.addEventListener('change', function() {
+            if (this.value) {
+                previewImg.src = this.value;
+                previewContainer.style.display = 'block';
+                imagemFile.value = ''; // Limpa o upload de arquivo
+                console.log('Imagem selecionada:', this.value);
+            } else {
+                previewContainer.style.display = 'none';
+            }
+        });
+
+        // Preview para arquivo enviado
+        imagemFile.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(this.files[0]);
+                imagemSelect.value = ''; // Limpa a seleção do dropdown
+                console.log('Arquivo selecionado:', this.files[0].name);
+            } else {
+                previewContainer.style.display = 'none';
+            }
+        });
+    });
+    </script>
 </body>
 </html>

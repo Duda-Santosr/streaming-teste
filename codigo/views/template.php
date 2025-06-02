@@ -25,7 +25,7 @@ $usuario = Auth::getUsuario();
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap&quot; rel="stylesheet');
         *{
             font-family: 'Poppins', sans-serif;
-            color: #fff !important;
+            color: #fff;
             padding: 0;
             margin: 0;
             box-sizing: border-box;
@@ -595,9 +595,7 @@ $usuario = Auth::getUsuario();
           <div class="col-md-6 col-lg-5 d-flex justify-content-center">
             <div class="p-3 common-container bg-dark text-white w-100" style="max-width: 400px;">
               <h4 class="text-center">Adicionar ao catálogo</h4>
-              <form class="needs-validation" method="POST" enctype="multipart/form-data" novalidate></form>
-              <!-- NAO REMOVA ESSE FORM OU O FORMULÁRIO DE ADICIONAR PARA DE FUNCIONAR -->
-              <form method="post" class="needs-validaton" novalidate>
+              <form method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
                 <!-- Título -->
                 <div class="mb-3">
                   <label class="form-label">Título</label>
@@ -633,10 +631,22 @@ $usuario = Auth::getUsuario();
                   </select>
                 </div>
                 <!-- Imagem -->
-                <!-- <div class="mb-3">
-                  <label for="imagem" class="form-label">Adicionar Imagem</label>
-                  <input type="file" name="imagem" id="imagem" class="form-control common-input" required>
-                </div> -->
+                <div class="mb-3">
+                  <label class="form-label">Imagem</label>
+                  <select name="imagem_existente" class="form-select common-input text-black mb-2">
+                    <option value="" class="text-black">Selecione uma imagem existente (opcional)</option>
+                    <?php
+                    $imagens = glob("../img/*.{jpg,jpeg,png,gif}", GLOB_BRACE);
+                    foreach ($imagens as $imagem) {
+                        $nome = basename($imagem);
+                        echo "<option value='img/{$nome}' >$nome</option>";
+                    }
+                    ?>
+                  </select>
+                  <!-- <div class="text-center mb-2">-- OU --</div>
+                  <label for="imagem" class="form-label">Upload de nova imagem</label>
+                  <input type="file" name="imagem" id="imagem" class="form-control common-input text-black" accept="image/*"> -->
+                </div>
                 <button type="submit" class="btn common-btn w-100 mt-2" name="adicionar">Adicionar</button>
                 <?php if(isset($_POST['cadastrar'])){echo "<p>item adicionado com sucesso</p>";}?>
               </form>
@@ -700,7 +710,7 @@ $usuario = Auth::getUsuario();
         <?php foreach ($locadora->listarItens() as $item): ?>
             <div class="col-md-6 col-lg-5 d-flex justify-content-center">
             <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-                <img src="../" class="card-img-top fmsr-poster" alt="Poster">
+                <img src="../<?= htmlspecialchars($item->getImagem()) ?>" class="card-img-top fmsr-poster" alt="<?= htmlspecialchars($item->getTitulo()) ?>">
                 <div class="card-body text-center">
               <h4 class="card-title"><?= htmlspecialchars($item->getTitulo()) ?></h4>
               
@@ -752,7 +762,7 @@ $usuario = Auth::getUsuario();
   </div>
 
   <script>
-  document.querySelector("form").addEventListener("submit", function (e) {
+  document.querySelector(".search-bar form").addEventListener("submit", function (e) {
     e.preventDefault();
     const searchValue = e.target.querySelector("input").value.toLowerCase();
  

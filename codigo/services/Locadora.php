@@ -8,36 +8,59 @@ class Locadora {
     private array $itens = [];
 
     public function __construct(){
+        if (!defined('ARQUIVO_JSON')) {
+            throw new \RuntimeException('Constante ARQUIVO_JSON não definida');
+        }
         $this->carregarItens();
     }
 
     private function carregarItens(): void {
-        if (file_exists(ARQUIVO_JSON)){
-
+        if (file_exists(ARQUIVO_JSON)) {
             // decodifica o arquivo JSON
-            $dados = json_decode(file_get_contents(ARQUIVO_JSON),true);
-
-            foreach ($dados as $dado){
-
-                if ($dado['tipo'] === 'filme'){
-                    $item = new Filme($dado['titulo'], $dado['sinopse'], $dado['tipo']);
-                } else if ($dado['tipo']=== 'serie'){
-                    $item = new Serie($dado['titulo'], $dado['sinopse'], $dado['tipo']);
-                } else if ($dado['tipo']=== 'novela') {
-                    $item = new Novela($dado['titulo'], $dado['sinopse'], $dado['tipo']);
-                } else if ($dado['tipo']=== 'desenho') {
-                    $item = new Desenho($dado['titulo'], $dado['sinopse'], $dado['tipo']);
-                } 
-
-                $item->setDisponivel($dado['disponivel']);
-                $this->itens[] = $item;
+            $jsonContent = file_get_contents(ARQUIVO_JSON);
+            if ($jsonContent === false) {
+                error_log("Erro ao ler o arquivo JSON: " . ARQUIVO_JSON);
+                return;
             }
+
+            $dados = json_decode($jsonContent, true);
+            if ($dados === null) {
+                error_log("Erro ao decodificar JSON: " . json_last_error_msg());
+                return;
+            }
+
+            error_log("Dados carregados do JSON: " . print_r($dados, true));
+
+            foreach ($dados as $dado) {
+                try {
+                    if ($dado['tipo'] === 'filme') {
+                        $item = new Filme($dado['titulo'], $dado['sinopse'], $dado['genero'], $dado['imagem'] ?? null);
+                    } else if ($dado['tipo'] === 'serie') {
+                        $item = new Serie($dado['titulo'], $dado['sinopse'], $dado['genero'], $dado['imagem'] ?? null);
+                    } else if ($dado['tipo'] === 'novela') {
+                        $item = new Novela($dado['titulo'], $dado['sinopse'], $dado['genero'], $dado['imagem'] ?? null);
+                    } else if ($dado['tipo'] === 'desenho') {
+                        $item = new Desenho($dado['titulo'], $dado['sinopse'], $dado['genero'], $dado['imagem'] ?? null);
+                    } else {
+                        error_log("Tipo de item desconhecido: " . $dado['tipo']);
+                        continue;
+                    }
+
+                    $item->setDisponivel($dado['disponivel']);
+                    $this->itens[] = $item;
+                    error_log("Item carregado: " . $item->getTitulo() . " com imagem: " . $item->getImagem());
+                } catch (\Exception $e) {
+                    error_log("Erro ao criar item: " . $e->getMessage());
+                }
+            }
+        } else {
+            error_log("Arquivo JSON não encontrado: " . ARQUIVO_JSON);
         }
     }
 
     // Salvar item
     private function salvarItens(): void {
-    $dados = [];
+        $dados = [];
 
         foreach ($this->itens as $item) {
             $dados[] = [
@@ -48,18 +71,32 @@ class Locadora {
                 'titulo' => $item->getTitulo(),
                 'sinopse' => $item->getSinopse(),
                 'genero' => $item->getGenero(),
-                'disponivel' => $item->isDisponivel()
+                'disponivel' => $item->isDisponivel(),
+                'imagem' => $item->getImagem()
             ];
         }
 
         $dir = dirname(ARQUIVO_JSON);
-
-        if (!is_dir($dir)){
-            mkdir($dir, 0777, true);
+        if (!is_dir($dir)) {
+            if (!mkdir($dir, 0777, true)) {
+                error_log("Erro ao criar diretório: " . $dir);
+                return;
+            }
         }
 
-        file_put_contents(ARQUIVO_JSON, json_encode($dados, JSON_PRETTY_PRINT));
-        
+        $jsonString = json_encode($dados, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        if ($jsonString === false) {
+            error_log("Erro ao codificar JSON: " . json_last_error_msg());
+            return;
+        }
+
+        $resultado = file_put_contents(ARQUIVO_JSON, $jsonString);
+        if ($resultado === false) {
+            error_log("Erro ao salvar arquivo JSON: " . ARQUIVO_JSON);
+        } else {
+            error_log("Dados salvos com sucesso em: " . ARQUIVO_JSON);
+            error_log("Conteúdo salvo: " . $jsonString);
+        }
     }
 
     // Adicionar novo item

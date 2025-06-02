@@ -1,1 +1,98 @@
-[]
+[
+    {
+        "tipo": "filme",
+        "titulo": "Como Treinar Seu Drag\u00e3o 2",
+        "sinopse": "Cinco anos se passaram desde que Solu\u00e7o estabeleceu a paz com os drag\u00f5es e vive em harmonia, na Ilha de Berk, com Banguela. Eles voam, apostam corridas e se divertem muito. Em uma destas aventuras, descobrem uma caverna secreta cheia de drag\u00f5es. Agora, a dupla luta para proteger Berk de um guerreiro perigoso, chamado Drago Bludvist, que deseja controlar todos os drag\u00f5es existentes.",
+        "genero": "infantil",
+        "disponivel": true,
+        "imagem": "img/comotreinarseudragao2.jpg"
+    },
+    {
+        "tipo": "serie",
+        "titulo": "Dexter",
+        "sinopse": "A s\u00e9rie Dexter acompanha Dexter Morgan, um especialista forense que, por um lado, trabalha no departamento de pol\u00edcia de Miami-Dade como analista de padr\u00f5es de sangue, mas que, por outro lado, tem uma vida dupla como assassino em s\u00e9rie. Ele mata apenas assassinos que n\u00e3o foram condenados e que escaparam da lei, seguindo um \"C\u00f3digo\" criado pelo seu pai, Harry. ",
+        "genero": "drama",
+        "disponivel": true,
+        "imagem": "img/dexter.jpg"
+    },
+    {
+        "tipo": "filme",
+        "titulo": "Ainda estou aqui",
+        "sinopse": "No in\u00edcio da d\u00e9cada de 1970, o Brasil enfrenta o endurecimento da ditadura militar. No Rio de Janeiro, a fam\u00edlia Paiva - Rubens, Eunice e seus cinco filhos - vive \u00e0 beira da praia em uma casa de portas abertas para os amigos. Um dia, Rubens Paiva \u00e9 levado por militares \u00e0 paisana e desaparece. Eunice - cuja busca pela verdade sobre o destino de seu marido se estenderia por d\u00e9cadas - \u00e9 obrigada a se reinventar e tra\u00e7ar um novo futuro para si e seus filhos.",
+        "genero": "drama",
+        "disponivel": true,
+        "imagem": "img/aindaestouaqui.jpg"
+    },
+    {
+        "tipo": "serie",
+        "titulo": "Peaky Blinders",
+        "sinopse": "\"Peaky Blinders\" \u00e9 uma s\u00e9rie brit\u00e2nica que se passa em Birmingham, Inglaterra, em 1919, e acompanha a fam\u00edlia Shelby, uma gangue criminosa que se fortalece ap\u00f3s a Primeira Guerra Mundial. A trama gira em torno de Thomas Shelby, l\u00edder da gangue, e sua ascens\u00e3o ao poder atrav\u00e9s de atividades ilegais como com\u00e9rcio de armas, apostas e extors\u00f5es. ",
+        "genero": "drama",
+        "disponivel": true,
+        "imagem": "img/peaky-blinders2.jpeg"
+    },
+    {
+        "tipo": "novela",
+        "titulo": "Vale Tudo",
+        "sinopse": "A sinopse de \"Vale Tudo\" gira em torno da rela\u00e7\u00e3o tensa entre Raquel, uma mulher honesta e \u00edntegra, e sua filha Maria de F\u00e1tima, uma jovem ambiciosa e disposta a tudo para alcan\u00e7ar o sucesso, independentemente dos meios. A novela explora temas como \u00e9tica, ambi\u00e7\u00e3o, corrup\u00e7\u00e3o e a busca pelo poder e dinheiro, em um Brasil p\u00f3s-crise monet\u00e1ria. ",
+        "genero": "drama",
+        "disponivel": true,
+        "imagem": "img/1.jpg"
+    },
+    {
+        "tipo": "novela",
+        "titulo": "Vale Tudo",
+        "sinopse": "A sinopse de \"Vale Tudo\" gira em torno da rela\u00e7\u00e3o tensa entre Raquel, uma mulher honesta e \u00edntegra, e sua filha Maria de F\u00e1tima, uma jovem ambiciosa e disposta a tudo para alcan\u00e7ar o sucesso, independentemente dos meios. A novela explora temas como \u00e9tica, ambi\u00e7\u00e3o, corrup\u00e7\u00e3o e a busca pelo poder e dinheiro, em um Brasil p\u00f3s-crise monet\u00e1ria. ",
+        "genero": "drama",
+        "disponivel": true,
+        "imagem": "img/no-image.jpg"
+    },
+    {
+        "tipo": "novela",
+        "titulo": "Vale Tudo",
+        "sinopse": "A sinopse de \"Vale Tudo\" gira em torno da rela\u00e7\u00e3o tensa entre Raquel, uma mulher honesta e \u00edntegra, e sua filha Maria de F\u00e1tima, uma jovem ambiciosa e disposta a tudo para alcan\u00e7ar o sucesso, independentemente dos meios. A novela explora temas como \u00e9tica, ambi\u00e7\u00e3o, corrup\u00e7\u00e3o e a busca pelo poder e dinheiro, em um Brasil p\u00f3s-crise monet\u00e1ria. ",
+        "genero": "drama",
+        "disponivel": true,
+        "imagem": "img/no-image.jpg"
+    },
+    {
+        "tipo": "novela",
+        "titulo": "Vale Tudo",
+        "sinopse": "A sinopse de \"Vale Tudo\" gira em torno da rela\u00e7\u00e3o tensa entre Raquel, uma mulher honesta e \u00edntegra, e sua filha Maria de F\u00e1tima, uma jovem ambiciosa e disposta a tudo para alcan\u00e7ar o sucesso, independentemente dos meios. A novela explora temas como \u00e9tica, ambi\u00e7\u00e3o, corrup\u00e7\u00e3o e a busca pelo poder e dinheiro, em um Brasil p\u00f3s-crise monet\u00e1ria. ",
+        "genero": "drama",
+        "disponivel": true,
+        "imagem": "img/no-image.jpg"
+    },
+    {
+        "tipo": "filme",
+        "titulo": "kjhgfd",
+        "sinopse": "lkjhg",
+        "genero": "romance",
+        "disponivel": true,
+        "imagem": "img/no-image.jpg"
+    },
+    {
+        "tipo": "filme",
+        "titulo": "kjhgfd",
+        "sinopse": "lkjhg",
+        "genero": "romance",
+        "disponivel": true,
+        "imagem": "img/no-image.jpg"
+    },
+    {
+        "tipo": "filme",
+        "titulo": "kjhgfd",
+        "sinopse": "lkjhg",
+        "genero": "romance",
+        "disponivel": true,
+        "imagem": "img/no-image.jpg"
+    },
+    {
+        "tipo": "filme",
+        "titulo": "kjhgfd",
+        "sinopse": "lkjhg",
+        "genero": "romance",
+        "disponivel": true,
+        "imagem": "img/no-image.jpg"
+    }
+]
