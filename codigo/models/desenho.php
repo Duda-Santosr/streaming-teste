@@ -3,7 +3,7 @@ namespace Models;
 use Interfaces\Locavel;
 
 //classe que representa as motos
-class desenho extends item implements Locavel {
+class Desenho extends Item implements Locavel {
 
     public function calcularAluguel(int $dias):float{
         return $dias * DIARIA_DESENHO;

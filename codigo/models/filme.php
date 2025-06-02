@@ -4,7 +4,7 @@ use Interfaces\Locavel;
 
 // Classe que representa um carro
 
-class filme extends item implements Locavel {
+class Filme extends Item implements Locavel {
 
     public function calcularAluguel(int $dias):float {
         return $dias * DIARIA_FILME;

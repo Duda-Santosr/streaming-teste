@@ -75,9 +75,9 @@ $usuario = Auth::getUsuario();
             color: #000 !important;
         }
         .common-btn:active{
-            background-color: #ddd !important;
+            background-color: #ccc !important;
             color: #000000 !important;
-            border: 3px solid #ddd !important;
+            border: none !important;
         }
         .common-btn:hover .bi, .common-btn:active .bi{
             color: #000 !important;
@@ -253,7 +253,7 @@ $usuario = Auth::getUsuario();
     <title>CineHome</title>
 </head>
 <body>
-    <!-- Barra de navegação -->
+   <!-- Barra de navegação -->
     <nav class="navbar navbar-expand-lg nav-color p-3">
         <div class="container-fluid justify-content-center">
         <a href="home_adm.html" class="navbar-brand nav-logo mx-auto">
@@ -310,13 +310,14 @@ $usuario = Auth::getUsuario();
     </div>
     </nav>
    
+   
 
     <!-- Título -->
     <div class="text-center my-4">
         <h2 class="title-font">CineHome</h2>
     </div>
 
-
+   
         <!-- ############## HOME ############ -->
 
     <div id="HOME">
@@ -393,10 +394,10 @@ $usuario = Auth::getUsuario();
                 </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselAssinaturas" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#carrosselAssinaturas" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselAssinaturas" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#carrosselAssinaturas" data-bs-slide="next">
                 <span class="carousel-control-next-icon"></span>
             </button>
             </div>
@@ -562,10 +563,10 @@ $usuario = Auth::getUsuario();
                     </div>
                     </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselAssinaturas" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselDesenhos" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselAssinaturas" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselDesenhos" data-bs-slide="next">
                     <span class="carousel-control-next-icon"></span>
                 </button>
                 </div>
@@ -594,39 +595,37 @@ $usuario = Auth::getUsuario();
           <div class="col-md-6 col-lg-5 d-flex justify-content-center">
             <div class="p-3 common-container bg-dark text-white w-100" style="max-width: 400px;">
               <h4 class="text-center">Adicionar ao catálogo</h4>
-              <form method="post" class="needs-validation mt-3" enctype="multipart/form-data" novalidate>
+              <form class="needs-validation" method="POST" enctype="multipart/form-data" novalidate></form>
+              <!-- NAO REMOVA ESSE FORM OU O FORMULÁRIO DE ADICIONAR PARA DE FUNCIONAR -->
+              <form method="post" class="needs-validaton" novalidate>
                 <!-- Título -->
                 <div class="mb-3">
-                  <label for="filme" class="form-label">Título</label>
-                  <input type="text" name="titulo" id="filme" class="form-control common-input text-black" required>
+                  <label class="form-label">Título</label>
+                  <input type="text" name="titulo" class="form-control common-input text-black" required>
                   <div class="invalid-feedback">Campo obrigatório</div>
                 </div>
                 <!-- Sinopse -->
                 <div class="mb-3">
-                  <label for="sinopse" class="form-label">Sinopse</label>
-                  <textarea class="form-control common-input text-black" name="sinopse" id="sinopse" rows="2" required></textarea>
+                  <label class="form-label">Sinopse</label>
+                  <textarea class="form-control common-input text-black" name="sinopse" rows="2" required></textarea>
                   <div class="invalid-feedback">Campo obrigatório</div>
                 </div>
-                <!-- Gênero -->
+                <!-- Gênero --> 
                 <div class="mb-3">
-                  <label for="genero" class="form-label">Gênero</label>
-                  <select name="genero" id="genero" class="form-select common-input text-black" required>
-                    <option value="" disabled selected>Selecione</option>
-                    <option value="acao" class="text-black">Ação</option>
-                    <option value="romance" class="text-black">Romance</option>
-                    <option value="comedia" class="text-black">Comédia</option>
-                    <option value="terror" class="text-black">Terror</option>
-                    <option value="drama" class="text-black">Drama</option>
-                    <option value="ficcao" class="text-black">Ficção Científica</option>
-                    <option value="animado" class="text-black">Animação</option>
+                  <label class="form-label">Gênero</label>
+                  <select name="genero" class="form-select common-input text-black" required>
+                    <option value="" hidden selected aria-invalid="true">Selecione</option> <option value="acao" class="text-black">Ação</option>
+                    <option value="romance" class="text-black">Romance</option> <option value="comedia" class="text-black">Comédia</option>
+                    <option value="terror" class="text-black">Terror</option> <option value="drama" class="text-black">Drama</option>
+                    <option value="ficcao" class="text-black">Ficção Científica</option> <option value="animado" class="text-black">Animação</option>
                     <option value="infantil" class="text-black">Infantil</option>
                   </select>
                 </div>
                 <!-- Tipo -->
                 <div class="mb-3">
-                  <label for="tipoAdicao" class="form-label">Tipo</label>
-                  <select name="tipo" id="tipoAdicao" class="form-select common-input text-black" required>
-                    <option value="" disabled selected>Selecione</option>
+                  <label class="form-label">Tipo</label>
+                  <select name="tipo" class="form-select common-input text-black" required>
+                    <option value="" hidden selected aria-invalid="true">Selecione</option>
                     <option value="filme" class="text-black">Filme</option>
                     <option value="serie" class="text-black">Série</option>
                     <option value="novela" class="text-black">Novela</option>
@@ -634,13 +633,13 @@ $usuario = Auth::getUsuario();
                   </select>
                 </div>
                 <!-- Imagem -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                   <label for="imagem" class="form-label">Adicionar Imagem</label>
-                  <input type="file" name="imagem" id="imagem" class="form-control common-input text-dark" required>
-                </div>
-                <button class="btn common-btn w-100 mt-2" type="submit" name="adicionar">Adicionar</button>
+                  <input type="file" name="imagem" id="imagem" class="form-control common-input" required>
+                </div> -->
+                <button type="submit" class="btn common-btn w-100 mt-2" name="adicionar">Adicionar</button>
+                <?php if(isset($_POST['cadastrar'])){echo "<p>item adicionado com sucesso</p>";}?>
               </form>
-              
             </div>
           </div>
         <?php endif; ?>
@@ -658,57 +657,57 @@ $usuario = Auth::getUsuario();
         <?php endif; ?>
 
           <!-- Formulário Calcular Preço -->
-          <div class="colcol-<?= Auth::isAdmin() ? 'md-6':'12' ?> col-lg-5 d-flex justify-content-center">
+          <div class="col-<?= Auth::isAdmin() ? 'md-6':'12' ?> col-lg-5 d-flex justify-content-center">
             <div class="p-3 common-container bg-dark text-white w-100" style="max-width: 400px;">
               <h4 class="text-center">Calcular Preço</h4>
               <form method="post" class="needs-validation mt-3" novalidate>
                 <!-- Tipo -->
                 <div class="mb-3">
-                  <label for="tipo_calculo" class="form-label">Tipo</label>
-                  <select name="tipo_calculo" id="tipo_calculo" class="form-select common-input text-black" required>
-                    <option value="" selected disabled>Selecione</option>
+                  <label class="form-label">Tipo</label>
+                  <select name="tipoCalculo" class="form-select common-input text-black" required>
+                    <option value="" selected hidden>Selecione</option>
                     <option value="filme" class="text-black">Filme</option>
                     <option value="serie" class="text-black">Série</option>
                     <option value="novela" class="text-black">Novela</option>
-                    <option value="desenho" class="text-black">Desenho</option>
+                    <option value="desenho" class="text-black">Documentário</option>
                   </select>
                 </div>
                 <!-- Dias -->
                 <div class="mb-3">
-                  <label for="dias_calculo" class="form-label">Tempo em dias</label>
-                  <input type="number" name="dias_calculo" id="dias_calculo" class="form-control common-input text-black " min="1" required>
+                  <label class="form-label">Tempo em dias</label>
+                  <input type="number" name="diasCalculo" class="form-control common-input text-black " min="1" required>
                 </div>
                 <button class="btn common-btn w-100 mt-2" type="submit" name="calcular">Calcular</button>
 
-                <br>
-                <br>
-                <?php if (!empty($mensagem) && isset($_POST['calcular'])): ?>
-                <div class="alert alert-danger text-center text-danger">
-                    <?= $mensagem ?>
-                </div>
-                <?php endif; ?>
               </form>
             </div>
           </div>
         </div>
+        <br>
+        <br>
+        <?php if ($mensagem):?>
+                <div class="alert alert-danger alert-dismissible fade show text-danger" role="alert">
+                <?= htmlspecialchars($mensagem) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+        <?php endif; ?>
+        <br>
+        <br>
+
         <!-- Cards-->
         <div class="row justify-content-center align-items-start gy-4 gx-4 mt-5">
         <!-- Itens cadastrados -->
         <?php foreach ($locadora->listarItens() as $item): ?>
             <div class="col-md-6 col-lg-5 d-flex justify-content-center">
             <div class="card bg-dark text-white w-100" style="max-width: 400px;">
-                <img src="<?= htmlspecialchars($item->getImagem()) ?>" class="card-img-top fmsr-poster" alt="<?= htmlspecialchars($item->getTitulo()) ?>">
+                <img src="../" class="card-img-top fmsr-poster" alt="Poster">
                 <div class="card-body text-center">
               <h4 class="card-title"><?= htmlspecialchars($item->getTitulo()) ?></h4>
               
-              <p>
-                    <?= 
-                        $item instanceof \Models\filme ? 'Filme' : (
-                            $item instanceof \Models\serie ? 'Serie' : (
-                                $item instanceof \Models\novela ? 'Novela' : 'Desenho'
-                            )
-                        );
-                    ?>
+                <p><?= $item instanceof \Models\Filme ? 'Filme' : (
+                $item instanceof \Models\Serie ? 'Serie' : (
+                $item instanceof \Models\Novela ? 'Novela' : 'Desenho')
+                );?>
                 </p>
               <!-- Formulário de ações -->
               <form method="POST" class="btn-group-actions d-flex flex-column gap-2">
@@ -720,6 +719,7 @@ $usuario = Auth::getUsuario();
                     <?= $item->isDisponivel() ? 'Disponível' : 'Alugado' ?>
                   </span>
                 </div>
+                <?php if (Auth::isAdmin()): ?>
                 <?php if ($item->isDisponivel()): ?>
                   <!-- Aluguel -->
                   <div class="d-flex gap-2 justify-content-center">
@@ -732,7 +732,6 @@ $usuario = Auth::getUsuario();
                     <button type="submit" name="devolver" class="btn btn-warning btn-sm">Devolver</button>
                   </div>
                 <?php endif; ?>
-                <?php if (Auth::isAdmin()): ?>
                   <!-- Ações Admin -->
                   <div class="d-flex gap-2 justify-content-center mt-2">
                     <button class="btn btn-secondary btn-sm" type="submit" name="editar">Editar</button>

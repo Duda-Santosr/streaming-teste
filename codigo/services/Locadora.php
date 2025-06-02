@@ -1,7 +1,7 @@
 <?php
 namespace Services;
 
-use Models\{item, filme, serie, desenho, novela};
+use Models\{Item, Filme, Serie, Desenho, Novela};
 
 // classe para gerenciar a locação
 class Locadora {
@@ -19,37 +19,38 @@ class Locadora {
 
             foreach ($dados as $dado){
 
-                if ($dado['tipo']=== 'Filme'){
-                    $item = new Filme($dado['titulo'], $dado['tipo']);
-                } else if ($dado['tipo']=== 'Serie'){
-                    $item = new Serie($dado['titulo'], $dado['tipo']);
-                } else if ($dado['tipo']=== 'Novela') {
-                    $item = new Novela($dado['titulo'], $dado['tipo']);
-                } else {
-                    $item = new Desenho($dado['titulo'], $dado['tipo']);
+                if ($dado['tipo'] === 'filme'){
+                    $item = new Filme($dado['titulo'], $dado['sinopse'], $dado['tipo']);
+                } else if ($dado['tipo']=== 'serie'){
+                    $item = new Serie($dado['titulo'], $dado['sinopse'], $dado['tipo']);
+                } else if ($dado['tipo']=== 'novela') {
+                    $item = new Novela($dado['titulo'], $dado['sinopse'], $dado['tipo']);
+                } else if ($dado['tipo']=== 'desenho') {
+                    $item = new Desenho($dado['titulo'], $dado['sinopse'], $dado['tipo']);
                 } 
-                $item->setDisponivel($dado['disponivel']);
 
+                $item->setDisponivel($dado['disponivel']);
                 $this->itens[] = $item;
             }
         }
     }
 
-    // Salvar veículos
+    // Salvar item
     private function salvarItens(): void {
     $dados = [];
 
-    foreach ($this->itens as $item) {
-        $dados[] = [
-            'tipo' => ($item instanceof Filme) ? 'Filme' :
-                     (($item instanceof Serie) ? 'Serie' :
-                     (($item instanceof Novela) ? 'Novela' :
-                     (($item instanceof Desenho) ? 'Desenho' : 'desconhecido'))),
-            'titulo' => $item->getTitulo(),
-            'genero' => $item->getGenero(),
-            'disponivel' => $item->isDisponivel()
-        ];
-    }
+        foreach ($this->itens as $item) {
+            $dados[] = [
+                'tipo' => ($item instanceof Filme) ? 'filme' :
+                         (($item instanceof Serie) ? 'serie' :
+                         (($item instanceof Novela) ? 'novela' :
+                         (($item instanceof Desenho) ? 'desenho' : null))),
+                'titulo' => $item->getTitulo(),
+                'sinopse' => $item->getSinopse(),
+                'genero' => $item->getGenero(),
+                'disponivel' => $item->isDisponivel()
+            ];
+        }
 
         $dir = dirname(ARQUIVO_JSON);
 
@@ -61,22 +62,21 @@ class Locadora {
         
     }
 
-    // Adicionar novo veículo
-    public function adicionarItem(item $item): void{
+    // Adicionar novo item
+    public function adicionarItem(Item $item): void{
         $this->itens[] = $item;
         $this->salvarItens();
+        $_POST = []; // Limpar os dados do formulário após adicionar
     }
 
-    
-
-    //Remover veículo
+    //Remover item
     public function deletarItem(string $titulo, string $genero): string{
 
         foreach ($this->itens as $key => $item){
 
-            // verifica se modelo e placa correspondem
-            if($item->getTitulo() === $titulo && $item->getTipo() === $genero){
-                // remove o veículo do array
+            // verifica se o titulo e tipo correspondem
+            if($item->getTitulo() === $titulo && $item->getGenero() === $genero){
+                // remove o item do array
                 unset($this->itens[$key]);
 
                 // reorganizar os indices
@@ -84,16 +84,16 @@ class Locadora {
 
                 // Salvar o novo estado
                 $this->salvarItens();
-                return "Veículo '{$titulo}' removido com sucesso!";
+                return "Item '{$titulo}' removido com sucesso!";
             }
         }
         return "Item não encontrado!";
     }
 
-    // Alugar veículo por n dias
+    // Alugar item por n dias
     public function alugarItem(string $titulo, int $dias = 1): string{
 
-        // percorre a lista de veículos
+        // percorre a lista de itens
         foreach($this->itens as $item){
 
             if($item->getTitulo() === $titulo && $item->isDisponivel()){
@@ -112,16 +112,16 @@ class Locadora {
         return "Item não disponível";
     }
 
-    // Devolver veículo
+    // Devolver item
 
-    public function devolverItem(string $titulo) :string{
+    public function devolverItem(string $titulo): string{
 
         // Percorrer a lista
         foreach($this->itens as $item){
 
-            if($item->getItem() === $titulo && !$item->isDisponivel()){
+            if($item->getTitulo() === $titulo && !$item->isDisponivel()){
 
-                // disponibilizar o veículo
+                // disponibilizar o item
                 $mensagem = $item->devolver();
 
                 $this->salvarItens();
@@ -131,26 +131,23 @@ class Locadora {
         return "Item já disponível ou não encontrado.";
     }
 
-    // Retorna a lista de veículos
+    // Retorna a lista de itens
 
     public function listarItens():array{
         return $this->itens;
     }
 
+    // Calcular previsão do valor
+    public function calcularPrevisaoAluguel(string $tipo, int $dias): float {
 
-    public function calcularPrevisaoAluguel(int $dias, string $tipo): float {
-    switch (strtolower($tipo)) {
-        case 'filme':
-            return $dias * DIARIA_FILME;
-        case 'serie':
-            return $dias * DIARIA_SERIE;
-        case 'novela':
-            return $dias * DIARIA_NOVELA;
-        case 'desenho':
-            return $dias * DIARIA_DESENHO;
-        default:
-            return 0;
+        if($tipo ==='Filme'){
+            return (new Filme('','','')) ->calcularAluguel($dias);
+        } elseif($tipo === 'Desenho'){
+            return (new Desenho('','','')) ->calcularAluguel($dias);
+        } elseif($tipo === 'Novela'){
+            return (new Novela('','','')) ->calcularAluguel($dias);
+        } else {
+        return (new Serie('','','')) ->calcularAluguel($dias);
+        }
     }
-}
-
 }

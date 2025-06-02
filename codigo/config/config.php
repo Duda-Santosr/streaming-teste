@@ -8,4 +8,3 @@ define('DIARIA_FILME', 20.00);
 define('DIARIA_SERIE', 5.00);
 define('DIARIA_NOVELA', 2.00);
 define('DIARIA_DESENHO', 5.00);
-

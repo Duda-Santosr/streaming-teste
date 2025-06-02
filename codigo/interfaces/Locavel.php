@@ -8,4 +8,3 @@ interface Locavel {
     public function devolver() : string;
     public function isDisponivel(): bool;
 }
-
