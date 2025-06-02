@@ -25,11 +25,14 @@ $usuario = Auth::getUsuario();
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap&quot; rel="stylesheet');
         *{
             font-family: 'Poppins', sans-serif;
-            color: #fff;
+            color: #fff !important;
             padding: 0;
             margin: 0;
             box-sizing: border-box;
         }
+        select option {
+  color: black !important;
+}
 
         /* fonte para títulos */
         .title-font{
@@ -58,6 +61,9 @@ $usuario = Auth::getUsuario();
         }
         .borderless{
             border: none;
+        }
+        option{
+            color: #000;
         }
 
         /* botões */
@@ -335,10 +341,10 @@ $usuario = Auth::getUsuario();
             <div id="slider" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                <img src="../img_home/conclave.jpg" class="d-block w-100 img-fluid" alt="Conclave" />
+                <img src="../img/conclave.jpg" class="d-block w-100 img-fluid" alt="Conclave" />
                 </div>
                 <div class="carousel-item">
-                <img src="../img_home/peaky-blinders2.jpeg" class="d-block w-100 img-fluid" alt="Vale Tudo" />
+                <img src="../img/peaky-blinders2.jpeg" class="d-block w-100 img-fluid" alt="Vale Tudo" />
                 </div>
                 <div class="carousel-item">
                 <img src="../img/greysanatomy (1).jpg" class="d-block w-100 img-fluid" alt="Peaky Blinders" />
@@ -363,16 +369,16 @@ $usuario = Auth::getUsuario();
                 <div class="carousel-item active">
                 <div class="row justify-content-center">
                     <div class="col-6 col-md-3 mb-3 d-flex justify-content-center">
-                    <img src="../img_home/you.jpg" class="poster-img" alt="Avenida Brasil">
+                    <img src="../img/you.jpg" class="poster-img" alt="Avenida Brasil">
                     </div>
                     <div class="col-6 col-md-3 mb-3 d-flex justify-content-center">
-                    <img src="../img_home/wicked.jpg" class="poster-img" alt="Vale Tudo">
+                    <img src="../img/wicked.jpg" class="poster-img" alt="Vale Tudo">
                     </div>
                     <div class="col-6 col-md-3 mb-3 d-flex justify-content-center">
-                    <img src="../img_home/pantanal.png" class="poster-img" alt="Peaky Blinders">
+                    <img src="../img/pantanal.png" class="poster-img" alt="Peaky Blinders">
                     </div>
                     <div class="col-6 col-md-3 mb-3 d-flex justify-content-center">
-                    <img src="../img_home/Breaking_bad.jpg" class="poster-img" alt="Liga da Justiça">
+                    <img src="../img/Breaking_bad.jpg" class="poster-img" alt="Liga da Justiça">
                     </div>
                 </div>
                 </div>
@@ -380,16 +386,16 @@ $usuario = Auth::getUsuario();
                 <div class="carousel-item">
                 <div class="row justify-content-center">
                     <div class="col-6 col-md-3 mb-3 d-flex justify-content-center">
-                    <img src="../img_home/pecadores.jpg" class="poster-img" alt="Como Treinar seu Dragão 2">
+                    <img src="../img/pecadores.jpg" class="poster-img" alt="Como Treinar seu Dragão 2">
                     </div>
                     <div class="col-6 col-md-3 mb-3 d-flex justify-content-center">
-                    <img src="../img_home/stranger_things.jpg" class="poster-img" alt="Chiquititas">
+                    <img src="../img/stranger_things.jpg" class="poster-img" alt="Chiquititas">
                     </div>
                     <div class="col-6 col-md-3 mb-3 d-flex justify-content-center">
-                    <img src="../img_home/outroladodoparaiso.jpg" class="poster-img" alt="Cobra Kai">
+                    <img src="../img/outroladodoparaiso.jpg" class="poster-img" alt="Cobra Kai">
                     </div>
                     <div class="col-6 col-md-3 mb-3 d-flex justify-content-center">
-                    <img src="../img_home/simpsons.jpg" class="poster-img" alt="Bosko Looney Tunes">
+                    <img src="../img/simpsons.jpg" class="poster-img" alt="Bosko Looney Tunes">
                     </div>
                 </div>
                 </div>
@@ -633,19 +639,16 @@ $usuario = Auth::getUsuario();
                 <!-- Imagem -->
                 <div class="mb-3">
                   <label class="form-label">Imagem</label>
-                  <select name="imagem_existente" class="form-select common-input text-black mb-2">
+                  <select name="imagem_existente" class="form-select common-input text-black mb-2 " style="color: black;">
                     <option value="" class="text-black">Selecione uma imagem existente (opcional)</option>
                     <?php
                     $imagens = glob("../img/*.{jpg,jpeg,png,gif}", GLOB_BRACE);
                     foreach ($imagens as $imagem) {
                         $nome = basename($imagem);
-                        echo "<option value='img/{$nome}' >$nome</option>";
+                        echo "<option value='img/{$nome}'>$nome</option>";
                     }
                     ?>
                   </select>
-                  <!-- <div class="text-center mb-2">-- OU --</div>
-                  <label for="imagem" class="form-label">Upload de nova imagem</label>
-                  <input type="file" name="imagem" id="imagem" class="form-control common-input text-black" accept="image/*"> -->
                 </div>
                 <button type="submit" class="btn common-btn w-100 mt-2" name="adicionar">Adicionar</button>
                 <?php if(isset($_POST['cadastrar'])){echo "<p>item adicionado com sucesso</p>";}?>

@@ -27,6 +27,11 @@ if (isset($_GET['logout'])){
     exit;
 }
 
+if (!is_dir('img/uploads')) {
+    mkdir('img/uploads', 0777, true);
+}
+chmod('img/uploads', 0777);
+
 // Criar uma instância da classe locadora
 $locadora = new Locadora();
 
@@ -45,20 +50,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    if (isset($_POST['adicionar']) ?? null) {
+    if (isset($_POST['adicionar'])) {
+        if (isset($_POST['titulo'], $_POST['sinopse'], $_POST['genero'], $_POST['tipo'])) {
+        try {
+            // Debug - Mostrar todos os dados do POST
+            error_log("Dados do POST: " . print_r($_POST, true));
+            
+            // Verifica se foi selecionada uma imagem existente
+            $imagemPath = null;
+            if (!empty($_POST['imagem_existente'])) {
+                $imagemPath = $_POST['imagem_existente'];
+                error_log("Imagem existente selecionada: " . $imagemPath);
+                
+                // Verifica se o arquivo existe
+                if (!file_exists($imagemPath)) {
+                    error_log("AVISO: Arquivo de imagem não encontrado: " . $imagemPath);
+                }
+            } 
+            // Se não foi selecionada uma imagem existente e foi feito upload
+            elseif (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+                error_log("Dados do arquivo enviado: " . print_r($_FILES['imagem'], true));
+                $imagemPath = $uploadHandler->handleUpload($_FILES['imagem']);
+                error_log("Nova imagem enviada: " . $imagemPath);
+            }
+            
+            // Se nenhuma imagem foi fornecida, usa a imagem padrão
+            if ($imagemPath === null) {
+                $imagemPath = 'img/no-image.jpg';
+                error_log("Usando imagem padrão: " . $imagemPath);
+            }
+        } catch (\RuntimeException $e) {
+            $mensagem = "Erro ao fazer upload da imagem: " . $e->getMessage();
+            goto renderizar;
+        }
         $titulo = $_POST['titulo'];
         $sinopse = $_POST['sinopse'];
         $genero = $_POST['genero'];
         $tipo = $_POST['tipo'];
 
         if ($tipo == 'serie'){
-            $item = new Serie($titulo, $sinopse, $genero);
+            $item = new Serie($titulo, $sinopse, $genero, $imagemPath);
         } elseif($tipo == 'filme'){
-            $item = new Filme($titulo, $sinopse, $genero);
+            $item = new Filme($titulo, $sinopse, $genero, $imagemPath);
         } elseif ($tipo == 'desenho'){
-            $item = new Desenho($titulo, $sinopse, $genero);
+            $item = new Desenho($titulo, $sinopse, $genero, $imagemPath);
         } elseif ($tipo == 'novela'){
-            $item = new Novela($titulo, $sinopse, $genero);
+            $item = new Novela($titulo, $sinopse, $genero, $imagemPath);
         } else {
             $mensagem = "Escolha um tipo válido.";
             goto renderizar;
@@ -67,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $locadora->adicionarItem($item);
 
         $mensagem = "Item adicionado com sucesso!";
+    }
     }
     elseif(isset($_POST['alugar'])){
 
@@ -88,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_POST = []; // Limpar os dados do formulário após alugar
     }
 }
+
 
 renderizar:
 require_once __DIR__ . '/../views/template.php';
