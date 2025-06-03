@@ -751,8 +751,33 @@ $usuario = Auth::getUsuario();
                     <button class="btn btn-danger btn-sm" type="submit" name="deletar">Deletar</button>
                   </div>
                 <?php endif; ?>
+                <?php if (Auth::isUser()): ?>
+                <!-- Botão para abrir o modal -->
+                <button type="button" class="btn btn-danger btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#modalSinopse<?= md5($item->getTitulo()) ?>">
+                    Ver mais
+                </button>
+                <?php endif; ?>
+
               </form>
             </div>
+            <?php if (Auth::isUser()): ?>
+                <!-- Modal de Sinopse -->
+                <div class="modal fade" id="modalSinopse<?= md5($item->getTitulo()) ?>" tabindex="-1" aria-labelledby="sinopseLabel<?= md5($item->getTitulo()) ?>" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sinopseLabel<?= md5($item->getTitulo()) ?>">
+                        <?= htmlspecialchars($item->getTitulo()) ?>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><?= nl2br(htmlspecialchars($item->getSinopse())) ?></p>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <?php endif; ?>
             </div>
             </div>
             <?php endforeach; ?>
